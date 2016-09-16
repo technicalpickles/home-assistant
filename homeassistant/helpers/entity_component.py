@@ -52,8 +52,12 @@ class EntityComponent(object):
         """
         self.config = config
 
+        print("setup " + self.domain)
         # Look in config for Domain, Domain 2, Domain 3 etc and load them
         for p_type, p_config in config_per_platform(config, self.domain):
+            from pprint import pprint
+            print(p_type)
+            pprint(p_config)
             self._setup_platform(p_type, p_config)
 
         # Generic discovery listener for loading platform dynamically
@@ -141,6 +145,7 @@ class EntityComponent(object):
             group = get_component('group')
             self.group = group.Group(self.hass, self.group_name,
                                      user_defined=False)
+            print("created group for " + self.group_name)
 
         if self.group is not None:
             self.group.update_tracked_entity_ids(self.entities.keys())

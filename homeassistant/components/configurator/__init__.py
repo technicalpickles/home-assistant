@@ -8,8 +8,10 @@ the user has submitted configuration information.
 """
 import logging
 
+from homeassistant.components import group
 from homeassistant.const import EVENT_TIME_CHANGED, ATTR_FRIENDLY_NAME
 from homeassistant.helpers.entity import generate_entity_id
+from homeassistant.helpers.entity_component import EntityComponent
 
 _INSTANCES = {}
 _LOGGER = logging.getLogger(__name__)
@@ -25,6 +27,11 @@ ATTR_LINK_URL = 'link_url'
 ATTR_SUBMIT_CAPTION = 'submit_caption'
 
 DOMAIN = 'configurator'
+SCAN_INTERVAL = 30
+
+GROUP_NAME_ALL_CONFIGURATORS = 'all configurators'
+ENTITY_ID_ALL_CONFIGURATORS = group.ENTITY_ID_FORMAT.format(
+    'all_configurators')
 
 ENTITY_ID_FORMAT = DOMAIN + '.{}'
 
@@ -73,6 +80,10 @@ def request_done(request_id):
 
 def setup(hass, config):
     """Setup the configurator component."""
+    component = EntityComponent(
+        _LOGGER, DOMAIN, hass, SCAN_INTERVAL, GROUP_NAME_ALL_CONFIGURATORS)
+    component.setup(config)
+
     return True
 
 

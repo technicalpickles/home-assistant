@@ -23,6 +23,7 @@ from homeassistant.components.light import (
 from homeassistant.const import CONF_FILENAME, CONF_HOST, DEVICE_DEFAULT_NAME
 from homeassistant.loader import get_component
 
+DEPENDENCIES = ['configurator']
 REQUIREMENTS = ['phue==0.8']
 MIN_TIME_BETWEEN_SCANS = timedelta(seconds=10)
 MIN_TIME_BETWEEN_FORCED_SCANS = timedelta(milliseconds=100)
