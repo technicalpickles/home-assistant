@@ -29,12 +29,14 @@ DATA_NEST = 'nest'
 NEST_CONFIG_FILE = 'nest.conf'
 CONF_CLIENT_ID = 'client_id'
 CONF_CLIENT_SECRET = 'client_secret'
+CONF_PRODUCT_VERSION = 'product_version'
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Required(CONF_CLIENT_ID): cv.string,
         vol.Required(CONF_CLIENT_SECRET): cv.string,
-        vol.Optional(CONF_STRUCTURE): vol.All(cv.ensure_list, cv.string)
+        vol.Optional(CONF_STRUCTURE): vol.All(cv.ensure_list, cv.string),
+        vol.Optional(CONF_PRODUCT_VERSION): cv.positive_int
     })
 }, extra=vol.ALLOW_EXTRA)
 
@@ -72,8 +74,8 @@ def setup_nest(hass, nest, config, pin=None):
         _LOGGER.debug("pin acquired, requesting access token")
         nest.request_token(pin)
 
-    if nest.access_token is None:
-        _LOGGER.debug("no access_token, requesting configuration")
+    if nest.authorization_required:
+        _LOGGER.debug("authorization required, requesting configuration")
         request_configuration(nest, hass, config)
         return
 
@@ -107,12 +109,14 @@ def setup(hass, config):
     client_id = conf[CONF_CLIENT_ID]
     client_secret = conf[CONF_CLIENT_SECRET]
     filename = config.get(CONF_FILENAME, NEST_CONFIG_FILE)
+    product_version = conf.get(CONF_PRODUCT_VERSION)
 
     access_token_cache_file = hass.config.path(filename)
 
     nest = nest.Nest(
         access_token_cache_file=access_token_cache_file,
-        client_id=client_id, client_secret=client_secret)
+        client_id=client_id, client_secret=client_secret,
+        product_version=product_version)
     setup_nest(hass, nest, config)
 
     return True
