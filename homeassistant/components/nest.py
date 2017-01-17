@@ -17,10 +17,7 @@ from homeassistant.loader import get_component
 _CONFIGURING = {}
 _LOGGER = logging.getLogger(__name__)
 
-REQUIREMENTS = [
-    'http://github.com/technicalpickles/python-nest'
-    '/archive/49991a08ab1d433f03698c6232a3ecf1bb8f07e4.zip'  # nest-cam branch
-    '#python-nest==3.0.5']
+REQUIREMENTS = ['python-nest==3.0.5']
 
 DOMAIN = 'nest'
 
